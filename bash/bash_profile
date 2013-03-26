@@ -1,0 +1,220 @@
+#chase's weird list of macros and shortcuts
+#tips:
+# <space>command -- not saved to history in bash
+
+#git config --global http.proxy %HTTP_PROXY%
+
+#Make sure user has home bin in path
+export PATH=$PATH:$HOME/bin
+
+#set global values for profile setup
+set_user() {
+  #if sudo'ed into root use real id
+  if [[ $EUID -ne 0 ]]; then
+    echo "$USER"
+  else
+    echo "$SUDO_USER"     
+  fi
+}
+
+USER=$(set_user)
+OS=$(uname)
+
+function parse_git_branch {
+    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1) /'
+}
+
+#cool but no
+#PS1="\[\e[32m\]\$(parse_git_branch)\[\e[34m\]\h:\W \$ \[\e[m\]"
+#export PS1
+
+die() {
+    pgrep $1 | xargs kill -9
+}
+
+dicheck() {
+    /etc/init.d/diamond restart && diamond-setup --print -C $
+}
+
+hfromip() {
+    #get hostname from an ip
+    dig +short -x $1
+}
+
+ramdrive() {
+    if [[ ${OS} == "Darwin" ]]; then
+        diskutil eraseVolume HFS+ RAMDisk `hdid -nomount ram://$((1024*2048))`
+    else
+        #Should be 'Linux'
+        mount -t tmpfs tmpfs /mnt -o size=1024m
+    fi
+}
+
+#nice search macro
+search() { find . -print | xargs grep "$@" ;}
+
+recent_history() {
+    #show recent sorted unique history
+    history|awk '{print $2}'|awk 'BEGIN {FS="|"} {print $1}'|sort|uniq -c|sort -rn|head -10
+}
+
+#Decrypt a file with passphrase
+decrypt() {
+    dd if=$1  | openssl des3 -d -k $2 |tar zxf -
+}
+
+#Encrypt a file with passphrase
+encrypt() {
+    tar -zcvf - $1 | openssl des3 -salt -k $2 | dd of=$1.des3
+}
+
+newgit() {
+    git add -A && git commit -m "$1" && git pull && git push
+}
+
+serve_me() {
+    python -m SimpleHTTPServer
+}
+
+# log command output
+function log_cmd() {
+
+    local to_file="$1"
+    shift
+    if [ -z "$to_file" ]; then
+        echo "Need a file to log to." 2>&1
+        return 1
+    elif [ -z "$*" ]; then
+        echo "Need a command to run." 2>&1
+        return 1
+    fi
+
+    echo "DATE: $(date)" > "$to_file"
+    echo "DIR: $(pwd)" >> "$to_file"
+    echo "CMD: $*" >> "$to_file"
+    echo "OUTPUT:" >> "$to_file"
+    echo >> $to_file
+    eval "$@ 2>&1 | tee -a '$to_file'"
+    return $?
+}
+
+#Managing dtach sessions
+detach()
+{
+    SESSION=/tmp/$1
+    echo "Creating: $SESSION"
+    dtach -c $SESSION bash
+}
+
+attach()
+{
+    SESSION=/tmp/$1
+    echo "Creating: $SESSION"
+    dtach -a $SESSION
+}
+
+
+all_cron_jobs() {
+    for user in $(cut -f1 -d: /etc/passwd); do echo "#### CRONJOBS FOR $user ####:";crontab -u $user -l;  done 
+}
+
+sshme() {
+  ssh -A -oStrictHostKeyChecking=no $USER@$1
+}
+
+tcpdumpshortcuts() {
+    #allow tcpdump aliases if no match pass on
+    case "$1" in
+        'cdp')
+            echo "CDP"
+            sudo tcpdump -nn -v -i eth0 -s 1500 -c 1 'ether[20:2] == 0x2000'
+            ;;
+        'dhcp')
+            echo "DHCPD & BOOTP"
+            sudo tcpdump port 67 or 68
+            ;;
+        'alias')
+            echo $"Usage:
+                         [cdp  - dump cdp facts takes up to 60 seconds
+                          dhcp - dhcp presets]"
+            ;;
+        *)
+            sudo tcpdump $@
+    esac
+}
+
+rm_allbut() {
+    ls * | grep -v $1  | xargs rm -rR
+}
+
+sudo_last() {
+    #run last command with sudo
+    sudo !!
+}
+
+last_new() {
+    #run last command sub arg 1 for arg 2
+     ^$1^$2
+}
+
+
+gitry() {
+    #Need relative path from /git for repo
+    #need box name for testing
+    sudo rsync -avz --exclude '*.git' -e ssh /Users/rush/git/$1 rush@$2:~
+}
+
+#alias_definitions:
+
+#desc [n <file>] nano with word warp, smooth scroll
+alias n="nano -wES"
+#desc interface for useful tcpdump commands
+alias td='tcpdumpshortcuts'
+alias tcpdump='tcpdumpshortcuts'
+#desc [g <regex> <file> shortcut to grep
+alias g='grep'
+#desc shortcut to history
+alias h='history'
+#desc [hg <regex>] grep for a command history
+alias hg='h | g'
+#desc [nocomment <file>] show a file without comments
+alias nocomment='grep -Ev '\''^(# |$)'\'''
+#desc [up <host>] run 3 ping tests
+alias up='time ping -c 3'
+#desc show open ports
+alias ports='netstat -tulanp'
+#desc show recent history
+alias rh='recent_history'
+#desc show cron jobs
+alias crons='all_cron_jobs | nocomment | sort'
+#desc [s <host>] ssh to host
+alias s='sshme'
+#desc back home
+alias home="cd ~ && pwd && ls"
+#desc [dc <new_session_file>] detach a shell session
+alias dc="detach"
+#desc [da <existing_session_file>] attach to a detached shell session
+alias da="attach"
+
+alias EXIT="exit"
+alias e='exit'
+
+alias u='cd .. && ls'
+alias uu='cd ../.. && ls'
+alias uuu='cd ../../.. && ls'
+alias uuuu='cd ../../../.. && ls'
+alias uuuuu='cd ../../../../..&& ls'
+alias uuuuuu='cd ../../../../../.. && ls'
+alias uuuuuuu='cd ../../../../../../.. && ls'
+alias uuuuuuuu='cd ../../../../../../../.. && ls'
+alias eip="curl ifconfig.me"
+#desc log <file>.log <cmd>
+alias log="log_cmd"
+#desc [erase <file>] empty contents of file 
+alias erase="cat /dev/null >"
+alias sudo="sudo -sE"
+alias ls="ls -G"
+alias v="vi"
+
+#simulation
+#apt-get -s install

@@ -1,0 +1,14 @@
+[user]
+	name = Chase MP
+	email = rush@deviantart.com
+[branch]
+	autosetuprebase = always
+[core]
+	editor = /usr/bin/nano
+	pager = less
+[color]
+        diff = auto
+        status = auto
+        branch = auto
+[format]
+        pretty = "Commit:  %C(yellow)%H%nAuthor:  %C(green)%aN <%aE>%nDate:    (%C(red)%ar%Creset) %ai%nSubject: %s%n%n%b"
