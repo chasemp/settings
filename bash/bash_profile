@@ -1,13 +1,9 @@
 #chase's weird list of macros and shortcuts
 #tips:
-# <space>command -- not saved to history in bash
-
+#'<space>command' -- not saved to history in bash
+#'> <file>' -- erases file contents
 #git config --global http.proxy %HTTP_PROXY%
 
-#Make sure user has home bin in path
-export PATH=$PATH:$HOME/bin
-
-#set global values for profile setup
 set_user() {
   #if sudo'ed into root use real id
   if [[ $EUID -ne 0 ]]; then
@@ -17,16 +13,129 @@ set_user() {
   fi
 }
 
+
+########USER ENV SETUP###########################
+#
 USER=$(set_user)
 OS=$(uname)
+export PATH=$PATH:$HOME/bin
+#
+##################################################
+
+########BASH AUTOCOMPLETION SETUP###############
+#
+if [ -f ~/bin/git-completion.bash ]; then
+    . ~/bin/git-completion.bash
+fi
+#Deal w/ autocompletion and aliases together
+complete -o default -o nospace -F _git_branch gb
+complete -o default -o nospace -F _git_checkout gc
+#
+##################################################
+
+########PUPPET###################################
+#
+limited_puppet_run()
+{
+    #Update single puppet module
+    sudo puppet agent --tags $1 --test
+}
+#
+##################################################
+
+########RUNIT###################################
+#
+#restart all runit services
+sv_restart() {
+for service in $(ls /etc/service); do echo "$service" ; sv restart $service;  done
+}
+#
+##################################################
 
 function parse_git_branch {
     git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1) /'
 }
 
-#cool but no
-#PS1="\[\e[32m\]\$(parse_git_branch)\[\e[34m\]\h:\W \$ \[\e[m\]"
-#export PS1
+#IP SHORTCUTS
+ip () {
+    case "$1" in
+        'br')
+            ip brief
+            ;;
+        'brief')
+            sudo ip addr show | grep inet | grep -v 127 | awk '{print $7, $2}' | grep -v '::'
+            ;;
+        'alias')
+            echo $"Usage: ip 
+                         [alias|br|brief]"
+            ;;
+        *)
+        sudo /bin/ip $@
+    esac
+}
+
+#APITUDE / DPKG
+apt() {
+    case "$1" in
+        'p')
+            echo "packages installed:"
+            dpkg -l
+            ;;
+        'l')
+            echo "list files a package"
+            sudo dpkg -L $2
+            ;;
+        's')
+            echo "search"
+            sudo aptitude search $2
+            ;;
+        'r')
+            echo "remove and purge"
+            sudo sudo aptitude remove --purge $2
+            ;;
+        'i')
+            echo "install $2"
+            sudo aptitude install $2 -y
+            ;;
+        'u')
+            echo "upgrade"
+            sudo aptitude upgrade -y
+            ;;
+        'sim')
+            echo "simulate install"
+            apt-get -s install $1
+            ;;
+        *)
+        echo $"Usage: apt 
+                         [p           - packages installed 
+                          u           - upgrade
+                          l <package> - files in a packages
+                          s <package> - search for a package
+                          r <package> - remove and purge a package
+                          sim <package> - simulate install
+                          i <package>- install a package]"
+    esac
+}
+
+hfromip() {
+    #get hostname from an ip
+    dig +short -x $1
+}
+
+#DIAMOND
+diamond() {
+    case "$1" in
+        'check')
+            /etc/init.d/diamond restart && diamond-setup --print -C $1
+            ;;
+        'help')
+        echo $"Usage: diamond 
+                          i <package>- install a package]"
+            ;;
+        *)
+        $@
+    esac
+}
 
 die() {
     pgrep $1 | xargs kill -9
@@ -40,6 +149,8 @@ hfromip() {
     #get hostname from an ip
     dig +short -x $1
 }
+
+
 
 ramdrive() {
     if [[ ${OS} == "Darwin" ]]; then
@@ -68,10 +179,26 @@ encrypt() {
     tar -zcvf - $1 | openssl des3 -salt -k $2 | dd of=$1.des3
 }
 
+########GIT###################################
+#
+function parse_git_branch {
+    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1) /'
+}
+
+gitry() {
+    #Need relative path from /git for repo
+    #need box name for testing
+    sudo rsync -avz --exclude '*.git' -e ssh /Users/rush/git/$1 rush@$2:~
+}
+
 newgit() {
     git add -A && git commit -m "$1" && git pull && git push
 }
 
+#
+##################################################
+
+#serve current dir web interface
 serve_me() {
     python -m SimpleHTTPServer
 }
@@ -157,44 +284,107 @@ last_new() {
      ^$1^$2
 }
 
-
-gitry() {
-    #Need relative path from /git for repo
-    #need box name for testing
-    sudo rsync -avz --exclude '*.git' -e ssh /Users/rush/git/$1 rush@$2:~
+#Kill process by name sometimes useful when pkill etc not avail
+kname() {
+    ps -ef | grep $1 | grep -v grep | awk '{print $2}' | xargs kill -9
 }
 
+#Separator do not remove
 #alias_definitions:
 
-#desc [n <file>] nano with word warp, smooth scroll
+#desc [n <file>] nano with word warp, smooth scroll -v
 alias n="nano -wES"
-#desc interface for useful tcpdump commands
+
+#desc 'td alias' for details
 alias td='tcpdumpshortcuts'
 alias tcpdump='tcpdumpshortcuts'
-#desc [g <regex> <file> shortcut to grep
+
+#desc [g <regex> <file> shortcut to grep -v
 alias g='grep'
-#desc shortcut to history
+
+#desc shortcut to history -v
 alias h='history'
-#desc [hg <regex>] grep for a command history
+
+#desc [hg <regex>] grep for a command history -v
 alias hg='h | g'
+
 #desc [nocomment <file>] show a file without comments
 alias nocomment='grep -Ev '\''^(# |$)'\'''
+
+#desc show brief ip address format
+alias ips='ip brief'
+
+#desc show global nat IP
+alias eip="curl ifconfig.me"
+
 #desc [up <host>] run 3 ping tests
 alias up='time ping -c 3'
+
 #desc show open ports
 alias ports='netstat -tulanp'
-#desc show recent history
+
+#desc show recent history tag=history
 alias rh='recent_history'
+
 #desc show cron jobs
 alias crons='all_cron_jobs | nocomment | sort'
+
 #desc [s <host>] ssh to host
 alias s='sshme'
-#desc back home
+
+#desc back home -v
 alias home="cd ~ && pwd && ls"
-#desc [dc <new_session_file>] detach a shell session
+
+#desc [dc <new_session_file>] detach a shell session tag=dtach
 alias dc="detach"
-#desc [da <existing_session_file>] attach to a detached shell session
+
+#desc [da <existing_session_file>] attach to a detached shell session tag=dtach
 alias da="attach"
+
+#desc restart all runit services tag=runit
+alias svrestart="sv_restart"
+
+#desc git add tag=git -v
+alias ga='git add'
+
+#desc git push tag=git -v
+alias gp='git push'
+
+#desc git add tag=git -v
+alias gl='git log'
+
+#desc git status tag=git -v
+alias gs='git status'
+
+#desc git diff tag=git -v
+alias gd='git diff'
+
+#desc git diff tag=git -v
+alias gm='git commit -m'
+
+#desc git commit tag=git -v
+alias gma='git commit -am'
+
+#desc git branch tag=git -v
+alias gb='git branch'
+
+#desc git checkout tag=git -v
+alias gc='git checkout'
+
+#desc git pull tag=git -v
+alias gpu='git pull'
+
+#desc git clone tag=git -v
+alias gcl='git clone'
+
+#desc git add/commit/pull/push tag=git -v
+alias gnew='newgit'
+
+#desc update single puppet module only tag=puppet
+alias lpr='limited_puppet_run'
+
+#desc kill proc by name  tag=ps
+alias kn='kname'
 
 alias EXIT="exit"
 alias e='exit'
@@ -207,11 +397,9 @@ alias uuuuu='cd ../../../../..&& ls'
 alias uuuuuu='cd ../../../../../.. && ls'
 alias uuuuuuu='cd ../../../../../../.. && ls'
 alias uuuuuuuu='cd ../../../../../../../.. && ls'
-alias eip="curl ifconfig.me"
+
 #desc log <file>.log <cmd>
 alias log="log_cmd"
-#desc [erase <file>] empty contents of file 
-alias erase="cat /dev/null >"
 alias sudo="sudo -sE"
 alias ls="ls -G"
 alias v="vi"
