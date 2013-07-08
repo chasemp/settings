@@ -52,6 +52,10 @@ for service in $(ls /etc/service); do echo "$service" ; sv restart $service;  do
 #
 ##################################################
 
+function testmail () {
+    echo "Subject: $1" | sendmail -vf test@test.com $USER@gmail.com
+}
+
 function parse_git_branch {
     git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1) /'
 }
