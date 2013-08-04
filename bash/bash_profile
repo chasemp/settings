@@ -401,12 +401,12 @@ alias uuuuu='cd ../../../../..&& ls'
 alias uuuuuu='cd ../../../../../.. && ls'
 alias uuuuuuu='cd ../../../../../../.. && ls'
 alias uuuuuuuu='cd ../../../../../../../.. && ls'
-
+alias cdns='sudo killall -HUP mDNSResponder'
 #desc log <file>.log <cmd>
 alias log="log_cmd"
 alias sudo="sudo -sE"
 alias ls="ls -G"
-alias v="vi"
+alias v="vim"
 
 #simulation
 #apt-get -s install
