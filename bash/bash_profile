@@ -78,6 +78,22 @@ ip () {
     esac
 }
 
+
+pep8() {
+    case "$1" in
+        'v')
+            pep8 --show-source $2
+            ;;
+        'vv')
+            pep8 --show-source --show-pep8 $2
+            ;;
+        *)
+        echo $"Usage: pep8
+                         [v            - show source context
+                          vv           - show pep8 context]"
+    esac
+}
+
 #APITUDE / DPKG
 apt() {
     case "$1" in
