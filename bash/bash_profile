@@ -4,6 +4,15 @@
 #'> <file>' -- erases file contents
 #git config --global http.proxy %HTTP_PROXY%
 
+
+function j() {
+    suggest=`~/git/github/chasemp/jump/jump.py $1`
+    echo $suggest
+    cd $@
+}
+
+
+
 set_user() {
   #if sudo'ed into root use real id
   if [[ $EUID -ne 0 ]]; then
@@ -390,6 +399,10 @@ alias gb='git branch'
 
 #desc git checkout tag=git -v
 alias gc='git checkout'
+
+#http://www.jukie.net/bart/blog/pimping-out-git-log
+#desc git log pimped
+alias gg='git lg'
 
 #desc git pull tag=git -v
 alias gpu='git pull'
