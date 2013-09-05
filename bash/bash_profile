@@ -4,14 +4,11 @@
 #'> <file>' -- erases file contents
 #git config --global http.proxy %HTTP_PROXY%
 
-
 function j() {
     suggest=`~/git/github/chasemp/jump/jump.py $1`
     echo $suggest
     cd $@
 }
-
-
 
 set_user() {
   #if sudo'ed into root use real id
@@ -30,6 +27,10 @@ OS=$(uname)
 export PATH=$PATH:$HOME/bin
 #
 ##################################################
+
+if [ -f ~/.bashrc ]; then
+  . ~/.bashrc
+fi
 
 ########BASH AUTOCOMPLETION SETUP###############
 #
@@ -178,8 +179,6 @@ hfromip() {
     #get hostname from an ip
     dig +short -x $1
 }
-
-
 
 ramdrive() {
     if [[ ${OS} == "Darwin" ]]; then
@@ -434,8 +433,4 @@ alias cdns='sudo killall -HUP mDNSResponder'
 #desc log <file>.log <cmd>
 alias log="log_cmd"
 alias sudo="sudo -sE"
-alias ls="ls -G"
 alias v="vim"
-
-#simulation
-#apt-get -s install
