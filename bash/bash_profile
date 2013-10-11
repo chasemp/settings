@@ -4,12 +4,6 @@
 #'> <file>' -- erases file contents
 #git config --global http.proxy %HTTP_PROXY%
 
-function j() {
-    suggest=`~/git/github/chasemp/jump/jump.py $1`
-    echo $suggest
-    cd $@
-}
-
 set_user() {
   #if sudo'ed into root use real id
   if [[ $EUID -ne 0 ]]; then
@@ -64,10 +58,6 @@ for service in $(ls /etc/service); do echo "$service" ; sv restart $service;  do
 
 function testmail () {
     echo "Subject: $1" | sendmail -vf test@test.com $USER@gmail.com
-}
-
-function parse_git_branch {
-    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1) /'
 }
 
 #IP SHORTCUTS
@@ -209,9 +199,6 @@ encrypt() {
 
 ########GIT###################################
 #
-function parse_git_branch {
-    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1) /'
-}
 
 gitry() {
     #Need relative path from /git for repo
@@ -227,7 +214,7 @@ newgit() {
 ##################################################
 
 #serve current dir web interface
-serve_me() {
+serve() {
     python -m SimpleHTTPServer
 }
 
@@ -302,11 +289,6 @@ rm_allbut() {
     ls * | grep -v $1  | xargs rm -rR
 }
 
-sudo_last() {
-    #run last command with sudo
-    sudo !!
-}
-
 last_new() {
     #run last command sub arg 1 for arg 2
      ^$1^$2
@@ -356,9 +338,6 @@ alias rh='recent_history'
 
 #desc show cron jobs
 alias crons='all_cron_jobs | nocomment | sort'
-
-#desc [s <host>] ssh to host
-alias s='sshme'
 
 #desc back home -v
 alias home="cd ~ && pwd && ls"
@@ -432,5 +411,5 @@ alias uuuuuuuu='cd ../../../../../../../.. && ls'
 alias cdns='sudo killall -HUP mDNSResponder'
 #desc log <file>.log <cmd>
 alias log="log_cmd"
-alias sudo="sudo -sE"
+alias s="sudo -sE"
 alias v="vim"

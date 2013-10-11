@@ -1,19 +1,24 @@
 [user]
-	name = Chase MP
-	email = rush@deviantart.com
+        name = Chase MP
+        email = rush@deviantart.com
 [branch]
-	autosetuprebase = always
+        autosetuprebase = always
 [core]
-	editor = /usr/bin/nano
-	pager = less
+        editor = /usr/bin/nano
+        pager = less
 [color]
-        diff = auto
-        status = auto
-        branch = auto
+    status = auto
+        ui = true
+
+[color "status"]
+    added = white
+    changed = cyan
+    untracked = magenta
+    deleted = red
 [format]
         pretty = "Commit:  %C(yellow)%H%nAuthor:  %C(green)%aN <%aE>%nDate:    (%C(red)%ar%Creset) %ai%nSubject: %s%n%n%b"
 [alias]
-	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-	timeline = log --oneline --graph --decorate
+        lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+        timeline = log --oneline --graph --decorate
 [help]
-	autocorrect = 1
+        autocorrect = 1
