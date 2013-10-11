@@ -82,8 +82,8 @@ fi
 PROMPT_COMMAND="${PREV_CMD}"'if [ -z "${_PS1_ORIG}" ]; then
                     export _PS1_ORIG=$PS1;
                 fi;
-                if [ -e /usr/local/bin/prompt.sh ]; then
-                    export _PS1="$(/usr/local/bin/prompt.sh)";
+                if [ -e ~/bin/prompt.sh ]; then
+                    export _PS1="$(~/bin/prompt.sh)";
                 fi;
 
                 PS1="${_PS1}${_PS1_ORIG}"'
@@ -116,8 +116,11 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-  . $(brew --prefix)/etc/bash_completion
+if [ "$OS" == "Darwin" ];
+  then
+    if [ -f $(brew --prefix)/etc/bash_completion ]; then
+      . $(brew --prefix)/etc/bash_completion
+  fi
 fi
 
 COLOR1="\[\033[0;36m\]"
