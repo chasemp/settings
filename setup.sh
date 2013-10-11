@@ -21,3 +21,10 @@ rm -f ~/bin/prompt.sh
 ln -s ~/settings/bin/prompt.sh ~/bin/prompt.sh
 chmod +x ~/bin/*
 
+if [ ! -d ~/bin ]
+then
+ cd && git clone https://github.com/chasemp/bin.git && cd -
+fi
+rm -f ~/bin/prompt.sh
+ln -s ~/settings/bin/prompt.sh ~/bin/prompt.sh
+chmod +x ~/bin/*
