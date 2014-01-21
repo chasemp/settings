@@ -83,12 +83,14 @@ PROMPT_COMMAND="${PREV_CMD}"'if [ -z "${_PS1_ORIG}" ]; then
                     export _PS1_ORIG=$PS1;
                 fi;
                 if [ -e ~/bin/prompt.sh ]; then
-                    export _PS1="$(~/bin/prompt.sh)";
+                    export _PS1="\$(~/bin/prompt.sh)";
                 fi;
 
                 PS1="${_PS1}${_PS1_ORIG}"'
 
 export PROMPT_COMMAND
+
+#PS1="$(~/bin/prompt.sh)${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]:"
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -102,11 +104,12 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 
-# Alias definitions.
+# Alias  and function definitions
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
+# for work specific stuff
 if [ -f ~/.bash_workcommands ]; then
     . ~/.bash_workcommands
 fi
