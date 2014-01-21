@@ -7,11 +7,13 @@ function rmfile() {
 rmfile ~/.profile
 rmfile ~/.bashrc
 rmfile ~/.bash_profile
+rmfile ~/.bash_aliases
 rmfile ~/.gitconfig
 rmfile ~/.sup.ini
 rmfile ~/.vimrc
 
 ln -s "$PWD/git/gitconfig" ~/.gitconfig
+ln -s "$PWD/bash/bash_aliases" ~/.bash_aliases
 ln -s "$PWD/bash/bash_profile" ~/.bash_profile
 ln -s "$PWD/bash/bashrc" ~/.bashrc
 ln -s "$PWD/sup/sup.ini" ~/.sup.ini
