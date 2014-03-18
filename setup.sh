@@ -19,7 +19,7 @@ ln -s "$PWD/bash/bashrc" ~/.bashrc
 ln -s "$PWD/sup/sup.ini" ~/.sup.ini
 ln -s "$PWD/vim/vimrc" ~/.vimrc
 
-rm -f ~/bin/prompt.sh
+rmfile ~/bin/prompt.sh
 ln -s ~/settings/bin/prompt.sh ~/bin/prompt.sh
 chmod +x ~/bin/*
 
