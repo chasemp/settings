@@ -19,14 +19,13 @@ ln -s "$PWD/bash/bashrc" ~/.bashrc
 ln -s "$PWD/sup/sup.ini" ~/.sup.ini
 ln -s "$PWD/vim/vimrc" ~/.vimrc
 
-rmfile ~/bin/prompt.sh
-ln -s ~/settings/bin/prompt.sh ~/bin/prompt.sh
-chmod +x ~/bin/*
-
 if [ ! -d ~/bin ]
 then
  cd && git clone https://github.com/chasemp/bin.git && cd -
 fi
+
 rm -f ~/bin/prompt.sh
 ln -s ~/settings/bin/prompt.sh ~/bin/prompt.sh
 chmod +x ~/bin/*
+
+ln -s ~/bin/blog.py /usr/local/bin/blog
