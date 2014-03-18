@@ -22,3 +22,5 @@
         timeline = log --oneline --graph --decorate
 [help]
         autocorrect = 1
+[push]
+	default = matching

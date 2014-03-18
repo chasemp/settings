@@ -1,4 +1,8 @@
 #!/bin/bash
+
+git config user.name "Chase Pettet [rush]"
+git config user.email chase.mp@gmail.com
+
 function rmfile() {
     local BIN=$1
     rm -vf $1
