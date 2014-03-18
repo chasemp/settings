@@ -406,3 +406,4 @@ alias cdns='sudo killall -HUP mDNSResponder'
 alias log="log_cmd"
 alias s="sudo -sE"
 alias v="vim"
+alias pass="apg -m 15 -t -n 1 -l -M N"
