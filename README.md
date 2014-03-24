@@ -15,3 +15,9 @@ Git User
     git config user.name "Chase Pettet [rush]"
 
     git config user.email chase.mp@gmail.com
+
+
+VIM
+=======
+https://github.com/tpope/vim-sensible
+https://github.com/puppetlabs/puppet-syntax-vim
