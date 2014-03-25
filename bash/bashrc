@@ -3,15 +3,17 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-# don't put duplicate lines in the history. See bash(1) for more options
-# don't overwrite GNU Midnight Commander's setting of `ignorespace'.
-HISTCONTROL=$HISTCONTROL${HISTCONTROL+:}ignoredups
-# ... or force ignoredups and ignorespace
-HISTCONTROL=ignoreboth
-
 # append to the history file, don't overwrite it
 shopt -s histappend
 HISTFILESIZE=2500
+# no duplicate entries
+export HISTCONTROL=ignoreboth:erasedups
+# append history file
+shopt -s histappend
+export HISTIGNORE='ls:pwd:date:cd:u:uu:uuu:uuuu:uuuuu:ls:ls -al'
+
+# update histfile after every comman
+export PROMPT_COMMAND="history -a"
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -87,7 +89,6 @@ PROMPT_COMMAND="${PREV_CMD}"'if [ -z "${_PS1_ORIG}" ]; then
                 fi;
 
                 PS1="${_PS1}${_PS1_ORIG}"'
-
 export PROMPT_COMMAND
 
 #PS1="$(~/bin/prompt.sh)${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]:"
