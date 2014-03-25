@@ -264,6 +264,10 @@ tcpdumpshortcuts() {
             echo "CDP"
             sudo tcpdump -nn -v -i eth0 -s 1500 -c 1 'ether[20:2] == 0x2000'
             ;;
+        'lldp')
+            echo "LLDP"
+            tcpdump -v -s 1500 -c 1 '(ether[12:2]=0x88cc or ether[20:2]=0x2000)'
+            ;;
         'dhcp')
             echo "DHCPD & BOOTP"
             sudo tcpdump port 67 or 68
