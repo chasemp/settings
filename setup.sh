@@ -16,6 +16,7 @@ rmfile ~/.bash_aliases
 rmfile ~/.gitconfig
 rmfile ~/.sup.ini
 rmfile ~/.vimrc
+rm -fR ~/.vim
 
 rm -R ~/.bash.completion.d/
 cp -R "$PWD/bash/bash.completion.d" ~/.bash.completion.d
@@ -26,7 +27,11 @@ ln -s "$PWD/bash/bash_profile" ~/.bash_profile
 ln -s "$PWD/bash/bashrc" ~/.bashrc
 ln -s "$PWD/bash/bash_git" ~/.bash_git
 ln -s "$PWD/sup/sup.ini" ~/.sup.ini
-ln -s "$PWD/vim/vimrc" ~/.vimrc
+
+
+mkdir ~/.vim
+ln -s "$PWD/vim_stuff/vim/*" ~/.vim/
+ln -s "$PWD/vim_stuff/vimrc" ~/.vimrc
 
 if [ ! -d ~/bin ]
 then
