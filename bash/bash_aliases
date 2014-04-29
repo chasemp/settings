@@ -36,6 +36,28 @@ for service in $(ls /etc/service); do echo "$service" ; sv restart $service;  do
 #
 ##################################################
 
+    extract () {
+        if [ -f $1 ] ; then
+          case $1 in
+            *.tar.bz2)   tar xjf $1     ;;
+            *.tar.gz)    tar xzf $1     ;;
+            *.bz2)       bunzip2 $1     ;;
+            *.rar)       unrar e $1     ;;
+            *.gz)        gunzip $1      ;;
+            *.tar)       tar xf $1      ;;
+            *.tbz2)      tar xjf $1     ;;
+            *.tgz)       tar xzf $1     ;;
+            *.zip)       unzip $1       ;;
+            *.Z)         uncompress $1  ;;
+            *.7z)        7z x $1        ;;
+            *)     echo "'$1' cannot be extracted via extract()" ;;
+             esac
+         else
+             echo "'$1' is not a valid file"
+         fi
+    }
+
+
 function testmail () {
     echo "Subject: $1" | sendmail -vf test@test.com $USER@gmail.com
 }
@@ -121,11 +143,6 @@ apt() {
     esac
 }
 
-hfromip() {
-    #get hostname from an ip
-    dig +short -x $1
-}
-
 #DIAMOND
 diamond() {
     case "$1" in
@@ -163,8 +180,9 @@ ramdrive() {
     fi
 }
 
-#nice search macro
-search() { find . -print | xargs grep "$@" ;}
+function ff(){
+  find . -iname $1 | grep -v .svn | grep -v .sass-cache
+}
 
 recent_history() {
     #show recent sorted unique history
@@ -287,6 +305,13 @@ kname() {
     ps -ef | grep $1 | grep -v grep | awk '{print $2}' | xargs kill -9
 }
 
+# Generates a tree view from the current directory
+function gtree(){
+        pwd
+        ls -R | grep ":$" |   \
+        sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+}
+
 #Separator do not remove
 #alias_definitions:
 
@@ -362,3 +387,23 @@ alias log="log_cmd"
 alias s="sudo -sE"
 alias v="vim"
 alias pass="apg -m 15 -t -n 1 -l -M N"
+alias mkdir="mkdir -p"
+alias myip='curl ip.appspot.com'
+alias flushDNS='dscacheutil -flushcache' 
+
+#   ii:  display useful host related informaton
+#   -------------------------------------------------------------------
+    ii() {
+        echo -e "\nYou are logged on ${RED}$HOST"
+        echo -e "\nAdditionnal information:$NC " ; uname -a
+        echo -e "\n${RED}Users logged on:$NC " ; w -h
+        echo -e "\n${RED}Current date :$NC " ; date
+        echo -e "\n${RED}Machine stats :$NC " ; uptime
+        echo -e "\n${RED}Current network location :$NC " ; scselect
+        echo -e "\n${RED}Public facing IP Address :$NC " ;myip
+        #echo -e "\n${RED}DNS Configuration:$NC " ; scutil --dns
+        echo
+    }
+
+
+    httpDebug () { /usr/bin/curl $@ -o /dev/null -w "dns: %{time_namelookup} connect: %{time_connect} pretransfer: %{time_pretransfer} starttransfer: %{time_starttransfer} total: %{time_total}\n" ; }

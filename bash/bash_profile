@@ -4,7 +4,6 @@ fi
 
 if [ -d ${HOME}/.bash.completion.d ]; then
  for file in ${HOME}/.bash.completion.d/* ; do
-   echo $file
    source $file
  done
 fi
