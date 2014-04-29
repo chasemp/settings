@@ -2,13 +2,9 @@ if [ -f ~/.bashrc ]; then
   . ~/.bashrc
 fi
 
-########BASH AUTOCOMPLETION SETUP###############
-#
-if [ -f ~/bin/git-completion.bash ]; then
-    . ~/bin/git-completion.bash
+if [ -d ${HOME}/.bash.completion.d ]; then
+ for file in ${HOME}/.bash.completion.d/* ; do
+   echo $file
+   source $file
+ done
 fi
-#Deal w/ autocompletion and aliases together
-complete -o default -o nospace -F _git_branch gb
-complete -o default -o nospace -F _git_checkout gc
-#
-##################################################

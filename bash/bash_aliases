@@ -13,19 +13,12 @@ set_user() {
   fi
 }
 
-
 ########USER ENV SETUP###########################
 #
 USER=$(set_user)
 OS=$(uname)
 export PATH=$PATH:$HOME/bin
 #
-##################################################
-
-#Deal w/ autocompletion and aliases together
-complete -o default -o nospace -F _git_branch gb
-complete -o default -o nospace -F _git_checkout gc
-
 ########PUPPET###################################
 #
 limited_puppet_run()
@@ -34,8 +27,6 @@ limited_puppet_run()
     sudo puppet agent --tags $1 --test
 }
 #
-##################################################
-
 ########RUNIT###################################
 #
 #restart all runit services
@@ -347,46 +338,6 @@ alias da="attach"
 
 #desc restart all runit services tag=runit
 alias svrestart="sv_restart"
-
-#desc git add tag=git -v
-alias ga='git add'
-
-#desc git push tag=git -v
-alias gp='git push'
-
-#desc git add tag=git -v
-alias gl='git log'
-
-#desc git status tag=git -v
-alias gs='git status'
-
-#desc git diff tag=git -v
-alias gd='git diff'
-
-#desc git diff tag=git -v
-alias gm='git commit -m'
-
-#desc git commit tag=git -v
-alias gma='git commit -am'
-
-#desc git branch tag=git -v
-alias gb='git branch'
-
-#desc git checkout tag=git -v
-alias gc='git checkout'
-
-#http://www.jukie.net/bart/blog/pimping-out-git-log
-#desc git log pimped
-alias gg='git lg'
-
-#desc git pull tag=git -v
-alias gpu='git pull'
-
-#desc git clone tag=git -v
-alias gcl='git clone'
-
-#desc git add/commit/pull/push tag=git -v
-alias gnew='newgit'
 
 #desc update single puppet module only tag=puppet
 alias lpr='limited_puppet_run'
