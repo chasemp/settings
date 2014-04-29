@@ -1,4 +1,9 @@
+#regular bash completion in git does not seem to play nice.
+#this is a workaround to get aliases and bash completion
+
 #http://ubuntuforums.org/showthread.php?t=733397
+#http://stackoverflow.com/questions/2553786/how-do-i-alias-commands-in-git
+
 # Author.: Ole J
 # Date...: 23.03.2008
 # License: Whatever
@@ -52,4 +57,4 @@ gitalias gcl 'git clone'
 alias gg='git lg'
 
 #desc git add/commit/pull/push tag=git -v
-alias gnew='newgit'
+alias ng='git add -A && git commit -m update && git push'
