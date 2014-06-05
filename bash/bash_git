@@ -52,6 +52,8 @@ gitalias gb 'git branch'
 gitalias gp 'git pull'
 gitalias gcl 'git clone'
 
+alias glean='git clean -df & git checkout .'
+
 #http://www.jukie.net/bart/blog/pimping-out-git-log
 #desc git log pimped
 alias gg='git lg'
