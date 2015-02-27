@@ -158,6 +158,47 @@ diamond() {
     esac
 }
 
+hhvm() {
+    case "$1" in
+        'health')
+            curl localhost:9002/check-health
+            ;;
+        'furl')
+            furl —headers —docroot /srv/mediawiki/docroot/wikipedia.org \
+               -script /w/index.php http://en.wikipedia.org/wiki/Main_Page
+            ;;
+        'logs')
+            tail -f -n 100/var/log/hhvm/error.log
+            ;;
+        'help')
+        echo $"HELP: HHVM
+                          logs - tail the logs
+                          furl - curl]
+
+                # sudo quickstack -p pgrep hhvm
+                # /var/log/hhvm gdb dump
+                # sudo perf top -p grep hhvm
+
+                https://grafana.wikimedia.org/#/dashboard/db/hhvm-health
+
+                hhvm runs via php cli command
+                hhvm installed with "alternatives"
+                /etc/hhvm/php.ini
+                image scalers not hhvm yet
+                hhvm in server mode only supports fastcgi port 9000
+                command to see existing hhvm queue usage?
+                queued until maxclients and then bad news
+                Facebook actually ships the compiled code
+                uses sqlite for local byte code storage"
+
+                # salt -G 'canary:appserver' test.ping
+
+            ;;
+        *)
+        $@
+    esac
+}
+
 die() {
     pgrep $1 | xargs kill -9
 }
