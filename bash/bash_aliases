@@ -326,7 +326,10 @@ tcpdumpshortcuts() {
             echo "PORT 80 HTTP"
             sudo tcpdump -A -s 0 'tcp port 80 and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&0xf0)>>2)) != 0)'
             ;;
-
+        'smtp')
+            echo "PORT DST 25 SMTP"
+            sudo tcpdump -l -s0 -w - tcp dst port 25 | strings
+            ;;
         'alias')
             echo $"Usage:
                          [cdp  - dump cdp facts takes up to 60 seconds
