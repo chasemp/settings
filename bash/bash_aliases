@@ -19,6 +19,7 @@ USER=$(set_user)
 OS=$(uname)
 export PATH=$PATH:$HOME/bin
 #
+
 ########PUPPET###################################
 #
 limited_puppet_run()
@@ -326,6 +327,11 @@ tcpdumpshortcuts() {
             echo "PORT 80 HTTP"
             sudo tcpdump -A -s 0 'tcp port 80 and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&0xf0)>>2)) != 0)'
             ;;
+        'http2')
+            # http://newzbie.blogspot.com/2011/10/tcpdump-tricks-capture-http-and-smtp.html
+            echo "PORT 80 HTTP"
+            sudo tcpdump -l -s0 -w - tcp dst port 80 | strings
+            ;;
         'smtp')
             echo "PORT DST 25 SMTP"
             sudo tcpdump -l -s0 -w - tcp dst port 25 | strings
@@ -439,6 +445,7 @@ alias pass="apg -m 15 -t -n 1 -l -M N"
 alias mkdir="mkdir -p"
 alias myip='curl ip.appspot.com'
 alias flushDNS='dscacheutil -flushcache' 
+alias ds='docker stats $(docker ps --format={{.Names}})'
 
 #   ii:  display useful host related informaton
 #   -------------------------------------------------------------------

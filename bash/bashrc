@@ -12,6 +12,15 @@ export HISTCONTROL=ignoreboth:erasedups
 shopt -s histappend
 export HISTIGNORE='ls:pwd:date:cd:u:uu:uuu:uuuu:uuuuu:ls:ls -al'
 
+# keep matching/ordering sane
+export LC_COLLATE=C
+
+# Quit less on one screen
+export LESS=FRX
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
 # update histfile after every comman
 export PROMPT_COMMAND="history -a"
 
