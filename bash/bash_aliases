@@ -1,3 +1,7 @@
+function epoch() {
+    date -d @$1
+}
+
 #chase's weird list of macros and shortcuts
 #tips:
 #'<space>command' -- not saved to history in bash
@@ -85,21 +89,6 @@ ip () {
 }
 
 
-pep8() {
-    case "$1" in
-        'v')
-            pep8 --show-source $2
-            ;;
-        'vv')
-            pep8 --show-source --show-pep8 $2
-            ;;
-        *)
-        echo $"Usage: pep8
-                         [v            - show source context
-                          vv           - show pep8 context]"
-    esac
-}
-
 #APITUDE / DPKG
 apt() {
     case "$1" in
@@ -152,6 +141,47 @@ diamond() {
         'help')
         echo $"Usage: diamond 
                           i <package>- install a package]"
+            ;;
+        *)
+        $@
+    esac
+}
+
+hhvm() {
+    case "$1" in
+        'health')
+            curl localhost:9002/check-health
+            ;;
+        'furl')
+            furl —headers —docroot /srv/mediawiki/docroot/wikipedia.org \
+               -script /w/index.php http://en.wikipedia.org/wiki/Main_Page
+            ;;
+        'logs')
+            tail -f -n 100/var/log/hhvm/error.log
+            ;;
+        'help')
+        echo $"HELP: HHVM
+                          logs - tail the logs
+                          furl - curl]
+
+                # sudo quickstack -p pgrep hhvm
+                # /var/log/hhvm gdb dump
+                # sudo perf top -p grep hhvm
+
+                https://grafana.wikimedia.org/#/dashboard/db/hhvm-health
+
+                hhvm runs via php cli command
+                hhvm installed with "alternatives"
+                /etc/hhvm/php.ini
+                image scalers not hhvm yet
+                hhvm in server mode only supports fastcgi port 9000
+                command to see existing hhvm queue usage?
+                queued until maxclients and then bad news
+                Facebook actually ships the compiled code
+                uses sqlite for local byte code storage"
+
+                # salt -G 'canary:appserver' test.ping
+
             ;;
         *)
         $@

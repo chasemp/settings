@@ -71,6 +71,11 @@ if [ "$OS" == "Darwin" ];
     alias grep="grep --color='auto'"
 fi
 
+# for git specific stuff
+if [ -f ~/.bash_git ]; then
+    . ~/.bash_git
+fi
+
 if [ -z "$PROMPT_COMMAND" ]; then
     PREV_CMD=
 else
@@ -87,7 +92,7 @@ PROMPT_COMMAND="${PREV_CMD}"'if [ -z "${_PS1_ORIG}" ]; then
                     export _PS1_ORIG=$PS1;
                 fi;
                 if [ -e ~/bin/prompt.sh ]; then
-                    export _PS1="\$(~/bin/prompt.sh)";
+                    export _PS1="\$(parse_git_branch)";
                 fi;
 
                 PS1="\n${_PS1_ORIG}\n${_PS1}${PS2}"'
@@ -114,11 +119,6 @@ fi
 # for work specific stuff
 if [ -f ~/.bash_workcommands ]; then
     . ~/.bash_workcommands
-fi
-
-# for git specific stuff
-if [ -f ~/.bash_git ]; then
-    . ~/.bash_git
 fi
 
 # enable programmable completion features

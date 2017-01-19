@@ -41,6 +41,19 @@ make-completion-wrapper _git _$1i $2
 complete -o bashdefault -o default -o nospace -F _$1i $1
 }
 
+function parse_git_branch {
+    gs=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD 2> /dev/null)
+    if [ -z "$gs" ]; then
+      return
+    fi
+    if [ "$gs" == "master" ]
+    then
+        echo "[m]"
+    else
+        echo "[$gs]"
+    fi
+}
+
 gitalias gc 'git checkout'
 gitalias ga 'git add'
 gitalias gpu 'git push'
