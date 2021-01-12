@@ -1,6 +1,6 @@
 [user]
         name = cpettet
-        email = rush@wikimedia.org
+        email = chase.mp@gmail.com
 [branch]
         autosetuprebase = always
 [core]
@@ -26,4 +26,4 @@
 [push]
 	default = matching
 [gitreview]
-	username = rush
+	username = chasemp

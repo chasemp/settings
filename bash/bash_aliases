@@ -1,4 +1,4 @@
-#chase's weird list of macros and shortcuts
+#chase's list of macros and shortcuts
 #tips:
 #'<space>command' -- not saved to history in bash
 #'> <file>' -- erases file contents
@@ -41,26 +41,26 @@ for service in $(ls /etc/service); do echo "$service" ; sv restart $service;  do
 #
 ##################################################
 
-    extract () {
-        if [ -f $1 ] ; then
-          case $1 in
-            *.tar.bz2)   tar xjf $1     ;;
-            *.tar.gz)    tar xzf $1     ;;
-            *.bz2)       bunzip2 $1     ;;
-            *.rar)       unrar e $1     ;;
-            *.gz)        gunzip $1      ;;
-            *.tar)       tar xf $1      ;;
-            *.tbz2)      tar xjf $1     ;;
-            *.tgz)       tar xzf $1     ;;
-            *.zip)       unzip $1       ;;
-            *.Z)         uncompress $1  ;;
-            *.7z)        7z x $1        ;;
-            *)     echo "'$1' cannot be extracted via extract()" ;;
-             esac
-         else
-             echo "'$1' is not a valid file"
-         fi
-    }
+extract () {
+    if [ -f $1 ] ; then
+        case $1 in
+        *.tar.bz2)   tar xjf $1     ;;
+        *.tar.gz)    tar xzf $1     ;;
+        *.bz2)       bunzip2 $1     ;;
+        *.rar)       unrar e $1     ;;
+        *.gz)        gunzip $1      ;;
+        *.tar)       tar xf $1      ;;
+        *.tbz2)      tar xjf $1     ;;
+        *.tgz)       tar xzf $1     ;;
+        *.zip)       unzip $1       ;;
+        *.Z)         uncompress $1  ;;
+        *.7z)        7z x $1        ;;
+        *)     echo "'$1' cannot be extracted via extract()" ;;
+         esac
+     else
+         echo "'$1' is not a valid file"
+     fi
+}
 
 
 function testmail () {
@@ -90,8 +90,9 @@ ip () {
 }
 
 
-#APITUDE / DPKG
-apt() {
+# APITUDE / DPKG
+# used to be "apt" shortcut but "apt" is now the official thing :D
+apted() {
     case "$1" in
         'p')
             echo "packages installed:"
@@ -216,7 +217,7 @@ function ff(){
 
 recent_history() {
     #show recent sorted unique history
-    history|awk '{print $2}'|awk 'BEGIN {FS="|"} {print $1}'|sort|uniq -c|sort -rn|head -10
+    history | awk '{print $2}'| awk 'BEGIN {FS="|"} {print $1}'| sort| uniq -c|sort -rn|head -10
 }
 
 #Decrypt a file with passphrase
@@ -229,20 +230,6 @@ encrypt() {
     tar -zcvf - $1 | openssl des3 -salt -k $2 | dd of=$1.des3
 }
 
-########GIT###################################
-#
-
-gitry() {
-    #Need relative path from /git for repo
-    #need box name for testing
-    sudo rsync -avz --exclude '*.git' -e ssh /Users/rush/git/$1 rush@$2:~
-}
-
-newgit() {
-    git add -A && git commit -m "$1" && git pull && git push
-}
-
-#
 ##################################################
 
 #serve current dir web interface
@@ -274,10 +261,6 @@ function log_cmd() {
 
 all_cron_jobs() {
     for user in $(cut -f1 -d: /etc/passwd); do echo "#### CRONJOBS FOR $user ####:";crontab -u $user -l;  done 
-}
-
-sshme() {
-  ssh -A -oStrictHostKeyChecking=no $USER@$1
 }
 
 tcpdumpshortcuts() {

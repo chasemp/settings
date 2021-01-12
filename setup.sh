@@ -1,6 +1,6 @@
 #!/bin/bash
 
-git config user.name "Chase Pettet [rush]"
+git config user.name "Chase Pettet"
 git config user.email chase.mp@gmail.com
 
 function rmfile() {
@@ -28,20 +28,15 @@ ln -s "$PWD/bash/bashrc" ~/.bashrc
 ln -s "$PWD/bash/bash_git" ~/.bash_git
 ln -s "$PWD/sup/sup.ini" ~/.sup.ini
 
-
-mkdir ~/.vim
-ln -s "$PWD/vim_stuff/vim/*" ~/.vim/
-ln -s "$PWD/vim_stuff/vimrc" ~/.vimrc
-
 if [ ! -d ~/bin ]
 then
  cd && git clone https://github.com/chasemp/bin.git && cd -
 fi
 
-rm -f ~/bin/prompt.sh
-ln -s ~/settings/bin/prompt.sh ~/bin/prompt.sh
-chmod +x ~/bin/*
+# rm -f ~/bin/prompt.sh
+# ln -s ~/settings/bin/prompt.sh ~/bin/prompt.sh
+# chmod +x ~/bin/*
 
-if [ ! -h /usr/local/bin/blog ]; then
-  ln -s ~/bin/blog.py /usr/local/bin/blog
-fi
+#if [ ! -h /usr/local/bin/blog ]; then
+#   ln -s ~/bin/blog.py /usr/local/bin/blog
+# fi

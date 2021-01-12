@@ -12,7 +12,7 @@ personal settings and things
 Git User
 ========
 
-    git config user.name "Chase Pettet [rush]"
+    git config user.name "Chase Pettet"
 
     git config user.email chase.mp@gmail.com
 
